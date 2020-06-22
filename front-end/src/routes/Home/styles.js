@@ -150,10 +150,10 @@ export const TextLevel = styled.div`
 `;
 
 export const CollapseBox = styled.div`
-  width: 100%;
+  width: 97%;
   background: #fff;
   position: absolute;
-  height: 300px;
+  height: 252px;
   border-top: 1px solid #e8e8e8;
   border-bottom: 1px solid #e8e8e8;
   padding: 23px;
@@ -171,16 +171,16 @@ export const CollapseTitle = styled.p`
 
 export const RowList = styled.div`
   display: flex;
-  width: 346px;
 `;
-export const RowItem = styled.div`
+export const ColLeft = styled.div`
   border: 1px solid #E3E3E3;
   height: 30px;
   font-size: 13px;
   font-family: open sans;
   align-items: center;
   display: flex;
-  padding: 0 60px 0 10px;
+  padding: 0 5px;
+  width: 150px;
 `;
 
 export const ColRight = styled.div`
@@ -190,7 +190,8 @@ export const ColRight = styled.div`
   font-family: open sans;
   align-items: center;
   display: flex;
-  padding: 0 130px 0 10px;
+  padding: 0 5px;
+  width: 130px;
   color: gray;
 `;
 
