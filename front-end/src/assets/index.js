@@ -3,7 +3,7 @@ export const Icons = {
   searchPerson: require('./step1.svg'),
   watchLover: require('./step2.svg'),
   timer: require('./step3.svg'),
-  commentBox: require('./arrowDown.svg'),
+  commentBox: require('./step4.svg'),
   logo: require('./logo.svg'),
   logout: require('./logout.svg'),
   search: require('./talent-search.svg'),

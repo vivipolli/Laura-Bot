@@ -2,12 +2,12 @@ const knex = require('../../database/index');
 
   exports.list = async function(req, res) {
     const patients = await knex("patients");
-    const { name, level } = req.query;
+    const { filter } = req.query;
 
-    const formatedName = name && name.charAt(0).toUpperCase() + name.slice(1)
+    const formatedName = filter && filter.charAt(0).toUpperCase() + filter.slice(1)
 
     const results = () => {
-      if (name) {
+      if (filter) {
         return patients.filter(
           patient => (patient.name).includes(formatedName) ?
             (patient.name).includes(formatedName)

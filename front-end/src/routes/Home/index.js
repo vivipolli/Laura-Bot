@@ -9,6 +9,7 @@ import CardSteps from '../../components/CardSteps';
 import ThinButton from '../../components/ThinButton';
 import SimpleDialog from '../../components/Dialog.js';
 import api from '../../services/api';
+import { criticalityLevel, criticalityTag } from '../../utils/criticality';
 
 import { Icons } from '../../assets';
 import {
@@ -59,7 +60,7 @@ const Home = () => {
   const history = useHistory();
 
   useEffect(() => {
-    api.get('patients', { params: { name: filter } }).then(res => {
+    api.get('patients', { params: { filter } }).then(res => {
       const data = res.data;
 
       const zero = data.filter(item => item.step === 0).length;
@@ -119,35 +120,6 @@ const Home = () => {
     )
   };
 
-  function criticalyLevel(level) {
-    switch (level) {
-      case 1:
-        return "1 (fraca)";
-      case 2:
-        return "2 (leve)";
-      case 3:
-        return "3 (médio)";
-      case 4:
-        return "4 (moderada)";
-      case 5:
-        return "5 (intenso)";
-      default:
-        return "Nenhum sintoma";
-    }
-  }
-
-  function criticalyTag(level) {
-    switch (level) {
-      case 1:
-        return "azul";
-      case 2 | 3:
-        return "amarelo";
-      case 4 | 5:
-        return "vermelho";
-      default:
-        return "nenhum";
-    }
-  }
 
   const stepsCards = [
     {
@@ -211,8 +183,8 @@ const Home = () => {
                     <NameTable>{row.name}</NameTable>
                   </Col>
                   <Col>
-                    <TextLevel level={criticalyTag(row.level)}>
-                      {criticalyTag(row.level)}
+                    <TextLevel level={criticalityTag(row.level)}>
+                      {criticalityTag(row.level)}
                     </TextLevel>
                   </Col>
                   <Col>
@@ -246,7 +218,7 @@ const Home = () => {
                       {!isEmpty(symtoms) && symtoms.map(item => (
                         <RowList>
                           <ColLeft>{item.name}</ColLeft>
-                          <ColRight>{criticalyLevel(item.level)}</ColRight>
+                          <ColRight>{criticalityLevel(item.level)}</ColRight>
                         </RowList>
                       ))}
                     </CollapseBox>
