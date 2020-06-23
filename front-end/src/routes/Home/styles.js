@@ -65,6 +65,7 @@ export const NumberBox = styled.span`
   color: var(--unnamed-color-7a7a7a);
   text-align: left;
   letter-spacing: 0px;
+  font-size: 14px;
   opacity: 1;
   font-family: open sans;
 }
@@ -83,7 +84,7 @@ export const TextStatus = styled.p`
   color: var(--unnamed-color-1c7d00);
   text-align: left;
   font-family: open sans;
-  font-size: 13px/18px;
+  font-size: 14px;
   letter-spacing: 0px;
   opacity: 1;
 
@@ -113,7 +114,7 @@ export const TextLevel = styled.div`
 
   ${props => {
     switch (props.level) {
-      case "high":
+      case "vermelho":
         return (
           css`
           background: var(--unnamed-color-ffccd3) 0% 0% no-repeat padding-box;
@@ -121,7 +122,7 @@ export const TextLevel = styled.div`
           color: var(--unnamed-color-ec2c47);
         `
         )
-      case "medium":
+      case "amarelo":
         return (
           css`
           background: var(--unnamed-color-fff7d5) 0% 0% no-repeat padding-box;
@@ -129,7 +130,7 @@ export const TextLevel = styled.div`
           color: var(--unnamed-color-f6c500);
         `
         )
-      case "low":
+      case "azul":
         return (
           css`
           color: blue;

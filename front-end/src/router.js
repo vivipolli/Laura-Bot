@@ -7,8 +7,8 @@ import Auth from './routes/Auth';
 const Routes = () => {
   return (
     <BrowserRouter>
-      <Route component={Home} path="/" exact />
-      <Route component={Auth} path="/login" />
+      <Route component={Home} path="/home" />
+      <Route component={Auth} path="/" exact/>
     </BrowserRouter>
   )
 };

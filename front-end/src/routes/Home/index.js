@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { isEmpty } from 'lodash';
+import { useHistory } from 'react-router-dom';
+import * as moment from 'moment';
 
 import Header from '../../components/Header';
 import CardSteps from '../../components/CardSteps';
@@ -43,6 +45,9 @@ const Home = () => {
   const [patients, setPatients] = useState([]);
   const [symtoms, setSymptoms] = useState([]);
 
+  const [filter, setFilter] = useState('');
+  const [description, setDescription] = useState(null);
+
   const [selected, setSelected] = useState(0);
   const [countStep, setCountStep] = useState({
     "zero": "0",
@@ -51,10 +56,12 @@ const Home = () => {
     "third": "0"
   })
 
+  const history = useHistory();
+
   useEffect(() => {
-    api.get('patients').then(res => {
-      const data = res.data.patients;
-      
+    api.get('patients', { params: { name: filter } }).then(res => {
+      const data = res.data;
+
       const zero = data.filter(item => item.step === 0).length;
       const first = data.filter(item => item.step === 1).length;
       const second = data.filter(item => item.step === 2).length;
@@ -72,7 +79,7 @@ const Home = () => {
         setPatients(patientsList);
       } else setPatients([]);
     })
-  }, [selected])
+  }, [selected, filter])
 
 
   function handleSelectItem(id) {
@@ -100,7 +107,17 @@ const Home = () => {
       )
   };
 
-
+  const onUpdate = (id) => {
+    const data = { description, status: 'Atendido' };
+    api.put(`patients/${id}`, data)
+    .then(() => 
+      { 
+        setOpen(false);
+        setSelected(0);
+        setDescription('');
+      }
+    )
+  };
 
   function criticalyLevel(level) {
     switch (level) {
@@ -119,7 +136,20 @@ const Home = () => {
     }
   }
 
-  const data = [
+  function criticalyTag(level) {
+    switch (level) {
+      case 1:
+        return "azul";
+      case 2 | 3:
+        return "amarelo";
+      case 4 | 5:
+        return "vermelho";
+      default:
+        return "nenhum";
+    }
+  }
+
+  const stepsCards = [
     {
       icon: Icons.searchPerson,
       number: countStep.zero,
@@ -144,10 +174,10 @@ const Home = () => {
 
   return (
     <>
-      <Header />
+      <Header onClick={() => history.push('/')} />
       <Container>
         <CardSteps
-          data={data}
+          data={stepsCards}
           selected={selected}
           handleSelected={handleSelectItem}
         />
@@ -162,7 +192,11 @@ const Home = () => {
             </RowHeader>
             <Row>
               <SearchRow>
-                <SearchInput type="text" placeholder="Busque por, prontuários, Nomes, Nível do alerta, ou status" />
+                <SearchInput
+                  value={filter}
+                  onChange={({ target: { value } }) => setFilter(value)}
+                  type="text"
+                  placeholder="Busque por, prontuários, Nomes, Nível do alerta, ou status" />
                 <SearchIcon src={Icons.search} alt="search" />
               </SearchRow>
             </Row>
@@ -170,16 +204,21 @@ const Home = () => {
               <>
                 <Row>
                   <Col>
+                  {/* sorry, I forgot to do this param */}
                     <NumberBox>123</NumberBox>
                   </Col>
                   <Col>
                     <NameTable>{row.name}</NameTable>
                   </Col>
                   <Col>
-                    <TextLevel level="nothing">azul</TextLevel>
+                    <TextLevel level={criticalyTag(row.level)}>
+                      {criticalyTag(row.level)}
+                    </TextLevel>
                   </Col>
                   <Col>
-                    <NumberBox>12/06/19 - 16:17</NumberBox>
+                    <NumberBox>
+                      {`${moment(row.create_at).format('DD/MM/YYYY')} - ${moment(row.create_at).format('hh:mm')}`}
+                    </NumberBox>
                   </Col>
                   <Col>
                     <TextStatus status="pending">{row.status}</TextStatus>
@@ -213,22 +252,25 @@ const Home = () => {
                     </CollapseBox>
                   </Row>
                 )}
+                <SimpleDialog
+                  handleClose={() => setOpen(false)}
+                  open={open}
+                  title="Evolução do atendimento"
+                  onSubmit={() => onUpdate(row.id)}
+                  disabled={description === null}
+                >
+                  <Dialog>
+                    <TextareaLabel>Descritivo da evolução</TextareaLabel>
+                    <Textarea
+                      value={description}
+                      onChange={({ target: { value } }) => setDescription(value)}
+                    />
+                  </Dialog>
+                </SimpleDialog>
               </>
             ))}
           </Table>
         </TableContainer>
-        <SimpleDialog
-          handleClose={() => setOpen(false)}
-          open={open}
-          title="Evolução do atendimento"
-        // onSubmit={}
-        // disabled={}
-        >
-          <Dialog>
-            <TextareaLabel>Descritivo da evolução</TextareaLabel>
-            <Textarea />
-          </Dialog>
-        </SimpleDialog>
       </Container>
     </>
   );
